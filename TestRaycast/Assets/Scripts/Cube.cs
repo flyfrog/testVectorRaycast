@@ -3,12 +3,12 @@ using UnityEngine;
 
 public class Cube : MonoBehaviour
 {
-    [Header("Materials")] 
     [SerializeField] private Material _defaultMaterial; // Красный
     [SerializeField] private Renderer _renderer;
     [SerializeField] private Color _defaultColor;
     [SerializeField] private Color _hitColor;
     [SerializeField] private TextMeshPro[]  _texts;
+    
     private Material _cachedMaterial;
 
     public void Construct(int index)
