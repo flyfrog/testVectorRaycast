@@ -18,6 +18,8 @@
 * В TestManager создаю _raycastObjectData чтобы при проверках лишний раз не алоцировать списки или массивы для обработки попаданий. Обертка для экономии памяти. 
 * В Cube использую _cachedMaterial чтобы не текла память на операции с материалом
 * В HitTextInfo использую StringBuilder чтобы не алоцировать на строках. В данном случаи это мелочи. Но хотел показать что знаю практикую.
+* Сделал асембли для RaycastEngine, такие утилиты должны быть изолированы.
+
 
  ************
  ![](https://raw.githubusercontent.com/flyfrog/testVectorRaycast/refs/heads/main/raycast_1.png)
