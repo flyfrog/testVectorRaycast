@@ -3,8 +3,6 @@ using UnityEngine;
 
 public class Cube : MonoBehaviour
 {
-    public Vector3 Position => transform.position;
-    
     [Header("Materials")] 
     [SerializeField] private Material _defaultMaterial; // Красный
     [SerializeField] private Renderer _renderer;
@@ -42,12 +40,12 @@ public class Cube : MonoBehaviour
         }
     }
 
-    public void ChangeHitColor()
+    public void SetHitColor()
     {
         _cachedMaterial.color = _hitColor;
     }
 
-    public void ChangeDefaultColor()
+    public void SetDefaultColor()
     {
         _cachedMaterial.color = _defaultColor;
     }

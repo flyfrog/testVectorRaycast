@@ -19,9 +19,6 @@ public class TestManager : MonoBehaviour
     private void Start()
     {
         SpawnCubes();
-
-        // Cursor.lockState = CursorLockMode.Locked;
-        // Cursor.visible = false;
     }
 
     private void SpawnCubes()
@@ -45,18 +42,17 @@ public class TestManager : MonoBehaviour
         Vector3 direction = transform.forward;
 
         RaycastEngine.UpdateHitData(origin, direction, _rayLength, _raycastObjectData);
-
-
+        
         for (var index = 0; index < _raycastObjectData.Length; index++)
         {
             var raycastObjectData = _raycastObjectData[index];
             if (raycastObjectData.HitStatus)
             {
-                _spawnedCubes[index].ChangeHitColor();
+                _spawnedCubes[index].SetHitColor();
             }
             else
             {
-                _spawnedCubes[index].ChangeDefaultColor();
+                _spawnedCubes[index].SetDefaultColor();
             }
         }
 
