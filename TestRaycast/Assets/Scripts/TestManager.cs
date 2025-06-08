@@ -33,7 +33,7 @@ public class TestManager : MonoBehaviour
         {
             Vector3 pos = Random.insideUnitSphere * _spawnRadius + _boxSpawnCenter.position;
             Cube spawnedCube = Instantiate(_cubePrefab, pos, Quaternion.identity);
-
+            spawnedCube.Construct(i);
             _spawnedCubes[i] = spawnedCube;
             _raycastObjectData[i] = new RaycastObjectData(pos, Vector3.one);
         }
