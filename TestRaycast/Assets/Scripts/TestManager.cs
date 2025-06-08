@@ -1,8 +1,10 @@
+using System;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
 public class TestManager : MonoBehaviour
 {
+    public event Action<RaycastObjectData[]> HitDataUpdatedEvent;
     public float RayLength => _rayLength;
 
     [SerializeField] private Cube _cubePrefab;
@@ -12,20 +14,20 @@ public class TestManager : MonoBehaviour
     [SerializeField] private float _rayLength = 50f;
 
     private Cube[] _spawnedCubes;
-    private RaycastObjectData[] _raycastObjectDatas;
+    private RaycastObjectData[] _raycastObjectData;
 
     private void Start()
     {
         SpawnCubes();
 
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+        // Cursor.lockState = CursorLockMode.Locked;
+        // Cursor.visible = false;
     }
 
     private void SpawnCubes()
     {
         _spawnedCubes = new Cube[_cubeCount];
-        _raycastObjectDatas = new RaycastObjectData[_cubeCount];
+        _raycastObjectData = new RaycastObjectData[_cubeCount];
 
         for (int i = 0; i < _cubeCount; i++)
         {
@@ -33,21 +35,21 @@ public class TestManager : MonoBehaviour
             Cube spawnedCube = Instantiate(_cubePrefab, pos, Quaternion.identity);
 
             _spawnedCubes[i] = spawnedCube;
-            _raycastObjectDatas[i] = new RaycastObjectData(pos, 1);
+            _raycastObjectData[i] = new RaycastObjectData(pos, Vector3.one);
         }
     }
 
-    private void NewShootRay()
+    private void ShootRay()
     {
         Vector3 origin = transform.position;
         Vector3 direction = transform.forward;
 
-        RaycastEngine.UpdateHitData(origin, direction, _rayLength, _raycastObjectDatas);
+        RaycastEngine.UpdateHitData(origin, direction, _rayLength, _raycastObjectData);
 
 
-        for (var index = 0; index < _raycastObjectDatas.Length; index++)
+        for (var index = 0; index < _raycastObjectData.Length; index++)
         {
-            var raycastObjectData = _raycastObjectDatas[index];
+            var raycastObjectData = _raycastObjectData[index];
             if (raycastObjectData.HitStatus)
             {
                 _spawnedCubes[index].ChangeHitColor();
@@ -57,11 +59,12 @@ public class TestManager : MonoBehaviour
                 _spawnedCubes[index].ChangeDefaultColor();
             }
         }
+
+        HitDataUpdatedEvent?.Invoke(_raycastObjectData);
     }
-
-
+    
     private void Update()
     {
-        NewShootRay();
+        ShootRay();
     }
 }
