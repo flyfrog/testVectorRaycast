@@ -2,15 +2,29 @@
 
 public static class RaycastEngine
 {
-    public const float EPSILON = 0.000001f;
+    private const float EPSILON = 0.000001f;
 
+    public static void UpdateHitData(Vector3 raycastStartPosition, Vector3 direction, float rayLength,
+          RaycastObjectData[] raycastObjectDatas)
+    {
+        for (int i = 0; i < raycastObjectDatas.Length; i++)
+        {
+            Vector3 relativePos = raycastObjectDatas[i].Position - raycastStartPosition;
 
+            if (RaycastIntersectsCube(raycastStartPosition, direction, relativePos, rayLength))
+            {
+                raycastObjectDatas[i].SetHitStatus(true);
+            }
+            else
+            {
+                raycastObjectDatas[i].SetHitStatus(false);
+            }
+        }
+    }
 
     public static bool RaycastIntersectsCube(Vector3 raycastStartPosition, Vector3 direction, Vector3 cubeCenter,
         float rayDistance)
     {
-        const float EPSILON = 1e-6f;
-
         Vector3 min = cubeCenter - Vector3.one * 0.5f;
         Vector3 max = cubeCenter + Vector3.one * 0.5f;
 
@@ -57,7 +71,20 @@ public static class RaycastEngine
     }
 }
 
-public class RaycastHit
+public class RaycastObjectData
 {
-    
+    public bool HitStatus { get; private set; }
+    public Vector3 Position { get; private set; }
+    public float Size { get; private set; }
+
+    public RaycastObjectData(Vector3 position, float size)
+    {
+        Position = position;
+        Size = size;
+    }
+
+    public void SetHitStatus(bool status)
+    {
+        HitStatus = status;
+    }
 }

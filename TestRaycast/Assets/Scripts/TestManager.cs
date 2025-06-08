@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -13,11 +10,11 @@ public class TestManager : MonoBehaviour
     [SerializeField] private float _spawnRadius = 10f;
     [SerializeField] private Transform _boxSpawnCenter;
     [SerializeField] private float _rayLength = 50f;
-    
-    private Cube[] _spawnedCubes;
-    private int _lastHitIndex = -1;
 
-    void Start()
+    private Cube[] _spawnedCubes;
+    private RaycastObjectData[] _raycastObjectDatas;
+
+    private void Start()
     {
         SpawnCubes();
 
@@ -25,54 +22,39 @@ public class TestManager : MonoBehaviour
         Cursor.visible = false;
     }
 
-    void SpawnCubes()
+    private void SpawnCubes()
     {
         _spawnedCubes = new Cube[_cubeCount];
-        
+        _raycastObjectDatas = new RaycastObjectData[_cubeCount];
+
         for (int i = 0; i < _cubeCount; i++)
         {
             Vector3 pos = Random.insideUnitSphere * _spawnRadius + _boxSpawnCenter.position;
             Cube spawnedCube = Instantiate(_cubePrefab, pos, Quaternion.identity);
 
-
             _spawnedCubes[i] = spawnedCube;
+            _raycastObjectDatas[i] = new RaycastObjectData(pos, 1);
         }
     }
 
-
-    void ShootRay()
+    private void NewShootRay()
     {
         Vector3 origin = transform.position;
         Vector3 direction = transform.forward;
 
-        List<int> hits = new();
+        RaycastEngine.UpdateHitData(origin, direction, _rayLength, _raycastObjectDatas);
 
-        for (int i = 0; i < _spawnedCubes.Length; i++)
+
+        for (var index = 0; index < _raycastObjectDatas.Length; index++)
         {
-            Vector3 relativePos = _spawnedCubes[i].Position - origin;
-
-            if (RaycastEngine.RaycastIntersectsCube(origin, direction, relativePos, _rayLength))
+            var raycastObjectData = _raycastObjectDatas[index];
+            if (raycastObjectData.HitStatus)
             {
-                hits.Add((i));
-            }
-        }
-
-
-        HashSet<int> hitIndices = new HashSet<int>();
-        foreach (var hit in hits)
-        {
-            hitIndices.Add(hit);
-        }
-
-        for (int i = 0; i < _spawnedCubes.Length; i++)
-        {
-            if (hitIndices.Contains(i))
-            {
-                _spawnedCubes[i].ChangeHitColor();
+                _spawnedCubes[index].ChangeHitColor();
             }
             else
             {
-                _spawnedCubes[i].ChangeDefaultColor();
+                _spawnedCubes[index].ChangeDefaultColor();
             }
         }
     }
@@ -80,6 +62,6 @@ public class TestManager : MonoBehaviour
 
     private void Update()
     {
-        ShootRay();
+        NewShootRay();
     }
 }
