@@ -20,4 +20,4 @@
 * В HitTextInfo использую StringBuilder чтобы не алоцировать на строках. В данном случаи это мелочи. Но хотел показать что знаю практикую.
 
  ************
-![](blob:https://xiaoyanhao.github.io/4fcbf322-1476-4227-b7c2-d52f9deda3cc)
+ ![](https://raw.githubusercontent.com/flyfrog/testVectorRaycast/refs/heads/main/raycast_1.png)
