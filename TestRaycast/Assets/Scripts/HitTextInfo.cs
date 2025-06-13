@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -23,45 +24,47 @@ public class HitTextInfo : MonoBehaviour
     private void DrawHitBoxId(RaycastObjectData[] raycastObjectData)
     {
         _stringBuilder.Clear();
-        _stringBuilder.Append("Нет попадений");
 
-        bool prefixWrited = false;
-        bool firstHitNumberWrited = false;
+        bool prefixWritten = false;
+        bool firstHitWritten = false;
 
-        for (var index = 0; index < raycastObjectData.Length; index++)
+        for (int index = 0; index < raycastObjectData.Length; index++)
         {
             var data = raycastObjectData[index];
             if (data.HitStatus)
             {
-                if (!prefixWrited)
+                if (!prefixWritten)
                 {
-                    prefixWrited = true;
-                    _stringBuilder.Clear();
+                    prefixWritten = true;
                     _stringBuilder.Append("Есть попадения в кубы: ");
                 }
 
-                if (firstHitNumberWrited)
+                if (firstHitWritten)
                 {
-                    _stringBuilder.Append($", ");
+                    _stringBuilder.Append(", ");
                 }
-                
-                if (!firstHitNumberWrited)
+                else
                 {
-                    firstHitNumberWrited = true;
+                    firstHitWritten = true;
                 }
-                
-                _stringBuilder.Append($"{index}");
+
+                _stringBuilder.Append(index); 
             }
         }
 
-        var result = _stringBuilder.ToString();
-        
-        if (result==_currentHitCubeInfo)
+        if (!prefixWritten)
+        {
+            _stringBuilder.Append("Нет попадений");
+        }
+
+    
+        if (_stringBuilder.Length == _currentHitCubeInfo.Length &&
+            _stringBuilder.ToString().AsSpan().SequenceEqual(_currentHitCubeInfo.AsSpan()))
         {
             return;
         }
 
-        _currentHitCubeInfo = result;
-        _text.text = result;
+        _currentHitCubeInfo = _stringBuilder.ToString();  
+        _text.text = _currentHitCubeInfo;
     }
 }
